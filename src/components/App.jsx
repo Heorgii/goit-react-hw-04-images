@@ -8,8 +8,7 @@ import Searchbar from "./Searchbar/Searchbar";
 import Loader from "./Loader/Loader";
 import { useState, useEffect } from 'react';
 
-const URL = 'https://pixabay.com/api/';
-const API_KEY = '30145762-bbea4d10537f12ddab0b4a39f';
+import fetchImage from 'js/fetchImg';
 
 const App = () => {
   const [pictures, setPictures] = useState([]);
@@ -25,35 +24,27 @@ const App = () => {
     }
     setStatus('pending');
 
-    const fetchImg = () => {
-      return fetch(
-        `${URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
-      )
-        .then(res => {
-          if (res.ok) {
-            return res.json();
-          }
-          return Promise.reject(new Error('Failed to find any images'));
-        })
-        .then(pictures => {
-          if (!pictures.totalHits) {
-            toast.error('Did find anything');
-          }
-          return pictures;
-        })
-        .catch(error => setError(error) && setStatus('rejected'));
-    };
-
-    fetchImg().then(pictures => {
-      const selectedProperties = pictures.hits.map(
-        ({ id, largeImageURL, webformatURL }) => {
-          return { id, largeImageURL, webformatURL };
+    fetchImage(query, page)
+      .then(pictures => {
+        if (!pictures.totalHits) {
+          toast.error('Did find anything');
         }
-      );
-      setPictures(prevState => [...prevState, ...selectedProperties]);
-      setStatus('resolved');
-      setTotalHits(pictures.total);
-    })
+        return pictures;
+      })
+
+      .then(pictures => {
+        const selectedProperties = pictures.hits.map(
+          ({ id, largeImageURL, webformatURL }) => {
+            return { id, largeImageURL, webformatURL };
+          }
+        );
+
+        setPictures(prevState => [...prevState, ...selectedProperties]);
+        setStatus('resolved');
+        setTotalHits(pictures.total);
+      })
+      .catch(error => setError(error) && setStatus('rejected'));
+
   }, [query, page]);
 
 

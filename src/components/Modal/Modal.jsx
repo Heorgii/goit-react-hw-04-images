@@ -9,23 +9,15 @@ const Modal = ({ onClose, pic }) => {
             }
         }
 
-        const handleClickClose = e => {
-            if (e.target.className.includes('Overlay')) {
-                return onClose();
-            }
-        }
-
         window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('click', handleClickClose);
-        
+
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('click', handleClickClose);
         }
     });
 
     return (
-        <div className="Overlay">
+        <div className="Overlay" >
             <div className="Modal">
                 <img src={pic} alt="" />
             </div>
