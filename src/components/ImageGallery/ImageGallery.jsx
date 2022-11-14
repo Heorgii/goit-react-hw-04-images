@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid'
 
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem'
 import Modal from 'components/Modal/Modal';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const ImageGallery = ({ images }) => {
     const [showModal, setShowModal] = useState(false);
